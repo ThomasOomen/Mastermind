@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Player Info</legend>
+                <div class="form-group">
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.playNormal(class="btn btn-outline-info") }}
+                {{ form.playCheat(class="btn btn-outline-info") }}
+            </div>
+        </form>
+{% endblock content %}
