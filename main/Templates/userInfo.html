@@ -4,13 +4,21 @@
         <form method="POST" action="">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Player Info</legend>
+                <legend class="border-bottom mb-4">{{current_user.username}}</legend>
                 <div class="form-group">
                 </div>
             </fieldset>
             <div class="form-group">
-                {{ form.playNormal(class="btn btn-outline-info") }}
-                {{ form.playCheat(class="btn btn-outline-info") }}
+                {{ form.amount_of_colors.label(class="form-control-label") }}
+                {{ form.amount_of_colors(class="form-control form-control-lg") }}
+                {{ form.amount_of_rows.label(class="form-control-label") }}
+                {{ form.amount_of_rows(class="form-control form-control-lg") }}
+                {{ form.cheat.label(class="form-control-label") }}
+                {{ form.cheat(class="form-control form-control-lg") }}
+                {{ form.double_colors.label(class="form-control-label") }}
+                {{ form.double_colors(class="form-control form-control-lg") }}
+
+                {{ form.play(class="btn btn-outline-info") }}
             </div>
         </form>
 {% endblock content %}

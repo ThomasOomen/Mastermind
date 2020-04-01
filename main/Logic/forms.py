@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired, Length, ValidationError
+from wtforms import StringField, SubmitField, IntegerField, BooleanField, widgets, RadioField
+from wtforms.validators import DataRequired, Length, ValidationError, NumberRange
 from main.Model.model import User, UserStats
 
 
@@ -20,5 +20,13 @@ class LoginForm(FlaskForm):
 
 
 class InfoForm(FlaskForm):
-    playNormal = SubmitField("normalGame")
-    playCheat = SubmitField("cheatGame")
+    amount_of_colors = IntegerField("Aantal kleuren", validators=[NumberRange(min=4, max=6, message='Invalid length'),
+                                                                  DataRequired()])
+    amount_of_rows = IntegerField("Aantal velden", validators=[NumberRange(min=4, max=6, message='Invalid length'),
+                                                               DataRequired()])
+    cheat = RadioField('Cheat mode', choices=[('1', u'Ja'), ('2', u'Nee'),], default='2',
+                       validators=[DataRequired()])
+    double_colors = RadioField('Dubbele kleuren', choices=[('1', u'Ja'),('2', u'Nee')], default='2',
+                               validators=[DataRequired()])
+    play = SubmitField("play")
+

@@ -10,10 +10,12 @@ def load_user(user_id):
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
-    Games = db.relationship('UserStats', backref="username", lazy=True)
+    stats = db.relationship('UserStats', backref="username", lazy=True)
+    game = db.relationship('Game', backref="user", uselist=False)
 
     def __repr__(self):
         return f"User('{self.id}', '{self.username}')"
+
 
 class UserStats(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -25,3 +27,15 @@ class UserStats(db.Model):
 
     def __repr__(self):
         return f"User('{self.date_played}', '{self.win}', '{self.cheat}', '{self.amount_of_guesses}', '{self.user_id}')"
+
+
+class Game(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    amount_of_colors = db.Column(db.Integer)
+    amount_of_rows = db.Column(db.Integer)
+    cheat = db.Column(db.String(50))
+    double_colors = db.Column(db.String(50))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return f"User('{self.id}', '{self.amount_of_colors}', '{self.amount_of_rows}', '{self.cheat}', '{self.double_colors}','{self.user_id}')"
