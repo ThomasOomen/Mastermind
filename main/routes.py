@@ -39,6 +39,8 @@ def register():
 @app.route("/info", methods=['GET', 'POST'])
 def userinfo():
     form = InfoForm()
+    active_user = flask_login.current_user.id
+    info = UserStats.query.filter_by(user_id=active_user).all()
     if form.validate_on_submit():
         if form.amount_of_rows.data <= form.amount_of_colors.data or form.double_colors.data == "True":
             active_user = flask_login.current_user.id
@@ -54,7 +56,7 @@ def userinfo():
     else:
         flash('Alle velden moeten worden ingevuld, aantal velden en kleuren 4 t/m 6. '
               'Als je meer velden dan kleuren invult moet je dubbele kleuren ook aanzetten')
-    return render_template('userInfo.html', title="userInfo", form=form)
+    return render_template('userInfo.html', title="userInfo", form=form,  info=info)
 
 
 @app.route("/game")

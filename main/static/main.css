@@ -2,6 +2,42 @@
   display: flex;
   padding: 10px;
 }
+
+.tableWrap {
+  height: 230px;
+  border: 2px solid black;
+  overflow: auto;
+}
+
+.tableWrap thead, .tableWrap tr, .tableWrap th {
+  position: sticky;
+  top: 0;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.tableWrap table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: sans-serif;
+}
+
+.tableWrap th {
+  padding: 16px 16px 16px 15px;
+  border-left: 1px dotted rgba(200, 209, 224, 0.6);
+  border-bottom: 1px solid #e8e8e8;
+  background: #ffc491;
+  text-align: center;
+  box-shadow: 0px 0px 0 2px #e8e8e8;;
+}
+
+.tableWrap td {
+  padding: 16px;
+}
+
+.tableWrap tr {
+  border-bottom: 2px solid #e8e8e8;
+
 #narrow {
   width: 100px;
 }
