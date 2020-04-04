@@ -8,6 +8,24 @@
                 <div class="form-group">
                 </div>
             </fieldset>
+            <div class="tableWrap">
+                <table>
+                    <tr>
+                        <th>Datum</th>
+                        <th class="table-col">Aantal zetten</th>
+                        <th class="table-col">Gewonnen</th>
+                        <th class="table-col">Cheatmode</th>
+                    </tr>
+                    {% for i in info %}
+                    <tr>
+                        <td>{{ i.date_played }}</td>
+                        <td>{{ i.amount_of_guesses }}</td>
+                        <td>{{ i.win }}</td>
+                        <td>{{ i.cheat }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
             <div class="form-group">
                 {{ form.amount_of_colors.label(class="form-control-label") }}
                 {{ form.amount_of_colors(class="form-control form-control-lg") }}
