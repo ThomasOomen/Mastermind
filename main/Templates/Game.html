@@ -1,4 +1,16 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>Mastermind</h1>
+    <form method="POST" action="">
+        {% for i in range(rows) %}
+            <div id="parent">
+            {%for i in range(colors)%}
+                <div id="narrow">
+                    {{ form.input }}
+
+                </div>
+            {%endfor%}
+            {{ form.submit }}
+            </div>
+        {%endfor%}
+    </form>
 {% endblock content %}
