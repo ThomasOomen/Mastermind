@@ -14,7 +14,7 @@
     <form method="POST" action="game" >
         {{ form.hidden_tag() }}
         {% if guessed_colors != [] %}
-            {% for row in range(rows) %}
+            {% for row in range(guessed_rows) %}
                 <div id="parent">
                     {%for i in range(colors)%}
                         <div id="narrow">
@@ -38,8 +38,14 @@
 			        {{ form.input }}
 		        </div>
 	        {%endfor%}
+            <div id="parent">
+                {%for i in range(rows)%}
+                    <div id="narrow">
+                        {{ form.input }}
+                    </div>
+                {%endfor%}
+            {{ form.submit() }}
         </div>
-        {{ form.submit() }}
     </form>
 </div>
 {% endblock content %}
