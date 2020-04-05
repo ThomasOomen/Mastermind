@@ -10,19 +10,36 @@
     </div>
 </div>
 
-
 <div class="guessbutton">
     <form method="POST" action="game" >
-            {{ form.hidden_tag() }}
-            <div id="parent">
-
-                {%for i in range(colors)%}
-                    <div id="narrow">
-                        {{ form.input }}
-                    </div>
-                {%endfor%}
-            {{ form.submit() }}
+        {{ form.hidden_tag() }}
+        {% if guessed_colors != [] %}
+            {% for row in range(rows) %}
+                <div id="parent">
+                    {%for i in range(colors)%}
+                        <div id="narrow">
+                            {% print(guessed_colors[row][i]) %}
+                        </div>
+                    {%endfor%}
+                    {% for check in checks[row] %}
+                        {% if check == 2 %}
+                            <div class="sq red"></div>
+                        {% endif %}
+                        {% if check == 1 %}
+                            <div class="sq"></div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div id="parent">
+	        {%for i in range(colors)%}
+		        <div id="narrow">
+			        {{ form.input }}
+		        </div>
+	        {%endfor%}
         </div>
+        {{ form.submit() }}
     </form>
 </div>
 {% endblock content %}
