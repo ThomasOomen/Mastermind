@@ -1,0 +1,28 @@
+{% extends "layout.jinja" %}
+{% block content %}
+<div >
+    {% if cheat == "True" %}
+    <div>
+        {%for i in code %}
+            {{i}}
+        {% endfor %}
+     {%endif%}
+    </div>
+</div>
+
+
+<div class="guessbutton">
+    <form method="POST" action="game" >
+            {{ form.hidden_tag() }}
+            <div id="parent">
+
+                {%for i in range(colors)%}
+                    <div id="narrow">
+                        {{ form.input }}
+                    </div>
+                {%endfor%}
+            {{ form.submit() }}
+        </div>
+    </form>
+</div>
+{% endblock content %}
