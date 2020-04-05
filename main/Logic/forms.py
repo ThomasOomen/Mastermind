@@ -34,7 +34,7 @@ class InfoForm(FlaskForm):
 
 
 class GameForm(FlaskForm):
-    input = SelectField(choices=[('groen', 'Groen'), ('geel', 'Geel'), ('rood', 'Rood'),
+    input = SelectField("Kleuren", choices=[('groen', 'Groen'), ('geel', 'Geel'), ('rood', 'Rood'),
                                  ('blauw', 'Blauw'), ('paars', 'Paars'), ('zwart', 'Zwart')])
     submit = SubmitField("Check")
 

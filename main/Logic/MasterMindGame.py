@@ -1,9 +1,10 @@
 import random
 from main.Logic.forms import GameForm
-from flask import render_template
+from flask import render_template, session
 from main.Model.model import UserStats, Game
 from datetime import datetime
 from main import db
+from operator import itemgetter
 
 class GameSetup:
     def __init__(self, amount_of_colors, amount_of_rows, cheat, double_colors):
@@ -36,17 +37,19 @@ class GameSetup:
 
     def generate_code(self, amount_of_colors, double_colors, usable_colors):
         colors = []
-        for color in range(amount_of_colors):
+        for color in range(int(self.amount_of_rows)):
             colors.append(usable_colors[color][1])
 
         if double_colors == "False":
-            code = random.sample(colors, amount_of_colors)
+            code = random.sample(colors, self.amount_of_rows)
             self.set_code(code)
             return code
         elif double_colors == "True":
             code = []
-            for amount in range(amount_of_colors):
+            for amount in range(self.amount_of_rows):
                 code.append(random.choice(usable_colors))
+            print("code na append", code)
+            code = list(map(itemgetter(1), code))
             self.set_code(code)
             return code
 
@@ -64,23 +67,30 @@ class GameSetup:
 
 
 class GameLogic:
-    def __init__(self, code, usable_colors, active_user, cheat, colors):
+    def __init__(self, code, usable_colors, active_user, cheat, colors, guesses, rows):
         self.mystery_code = code
         self.usable_colors = usable_colors
+        self.rows = rows
         self.won = False
         self.cheat = cheat
         self.active_user = active_user
-        self.guesses = 10
+        if guesses is None:
+            self.guesses = 1
+        else:
+            self.guesses = guesses
         self.colors_info = colors
         form = GameForm()
         form.input.choices = self.usable_colors
         self.form = form
-        print("weeee")
 
+    def print(self):
+        print(self.usable_colors)
+        print(self.rows)
 
     def check(self, inputs):
         guesses_correct = []
         temp_code = self.mystery_code.copy()
+        print("temp code ", temp_code)
         list = []
         for guess in inputs:
             x = self.usable_colors[int(guess)][1]
@@ -96,12 +106,12 @@ class GameLogic:
             if list[color] in temp_code:
                 temp_code[temp_code.index(list[color])] = None
                 guesses_correct.append(2)
-
-        if len(guesses_correct) == 4 and all(number is 1 for number in guesses_correct):
+        print(guesses_correct)
+        if len(guesses_correct) == self.rows and all(number is 1 for number in guesses_correct):
             self.won = True
         else:
-            print("hier moet ie een keer de hoeveelheid guesses ophogen :), maar dat doet ie nog niet")
-            # self.update_amount_of_guesses()
+            self.set_guesses()
+            session["guesses"] = self.get_guesses()
         return guesses_correct
 
     def update(self, inputs):
@@ -113,7 +123,7 @@ class GameLogic:
             self.updateDb(win=False)
             return render_template('lose.jinja')
         else:
-            return render_template("Game.jinja", form=self.form, colors=self.colors_info,
+            return render_template("Game.jinja", form=self.form, rows=self.rows,
                                     code=self.mystery_code, cheat=self.cheat)
 
     def updateDb(self, win):
@@ -127,6 +137,12 @@ class GameLogic:
         db.session.commit()
 
         info = Game.query.filter_by(user_id=self.active_user).first()
-        print(info)
         db.session.delete(info)
         db.session.commit()
+       # self.guesses = 0
+
+    def set_guesses(self):
+        self.guesses += 1
+
+    def get_guesses(self):
+        return self.guesses

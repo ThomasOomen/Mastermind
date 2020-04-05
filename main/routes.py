@@ -74,7 +74,9 @@ def newgame():
     session["active_user"] = active_user
     session["cheat"] = gameSetup.get_cheat()
     session["colors"] = info.amount_of_colors
-    return render_template("Game.jinja", form=form, colors=info.amount_of_colors,
+    session["rows"] = info.amount_of_rows
+    session["guesses"] = 0
+    return render_template("Game.jinja", form=form, rows=info.amount_of_rows,
                             code=gameSetup.get_code(), cheat=gameSetup.get_cheat())
 
 
@@ -84,5 +86,5 @@ def game():
         return gameLogic.update(request.values.getlist('input'))
     else:
         gameLogic = GameLogic(session.get("code"), session.get("usable_colors"), session.get("active_user"),
-                              session.get("cheat"), session.get("colors"))
+                              session.get("cheat"), session.get("colors"), session.get("guesses"), session.get("rows"))
         return gameLogic.update(request.values.getlist('input'))
