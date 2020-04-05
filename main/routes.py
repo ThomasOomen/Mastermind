@@ -57,13 +57,14 @@ def userinfo():
     else:
         flash('Alle velden moeten worden ingevuld, aantal velden en kleuren 4 t/m 6. '
               'Als je meer velden dan kleuren invult moet je dubbele kleuren ook aanzetten')
-    return render_template('userInfo.jinja', title="userInfo", form=form,  info=info)
+    return render_template('userInfo.jinja', title="userInfo", form=form, info=info)
 
 
 @app.route("/newgame", methods=['POST', 'GET'])
 def newgame():
     active_user = flask_login.current_user.id
-    info = Game.query.filter_by(user_id=active_user).first()
+    all_games = Game.query.filter_by(user_id=active_user).all()
+    info = all_games[-1]
     # print(info.cheat, info.double_colors)
     gameSetup = GameSetup(info.amount_of_colors, info.amount_of_rows, info.cheat, info.double_colors)
     gameSetup.game_setup(gameSetup.build_usable_colors())
@@ -75,9 +76,12 @@ def newgame():
     session["cheat"] = gameSetup.get_cheat()
     session["colors"] = info.amount_of_colors
     session["rows"] = info.amount_of_rows
-    session["guesses"] = 0
-    return render_template("Game.jinja", form=form, rows=info.amount_of_rows,
-                            code=gameSetup.get_code(), cheat=gameSetup.get_cheat())
+
+    session["guessed_colors"] = []
+    session["correct_guesses"] = []
+    session["guesses_used"] = 0
+    return render_template("Game.jinja", form=form, rows=info.amount_of_rows, colors=info.amount_of_colors,
+                           code=gameSetup.get_code(), cheat=gameSetup.get_cheat(), rows=1, guessed_colors=[])
 
 
 @app.route('/game', methods=['POST'])
@@ -86,5 +90,6 @@ def game():
         return gameLogic.update(request.values.getlist('input'))
     else:
         gameLogic = GameLogic(session.get("code"), session.get("usable_colors"), session.get("active_user"),
-                              session.get("cheat"), session.get("colors"), session.get("guesses"), session.get("rows"))
+                              session.get("cheat"), session.get("colors"), session.get("rows")), session.get("guessed_colors"),
+                              session.get("guesses_used"), session.get("correct_guesses"))
         return gameLogic.update(request.values.getlist('input'))
