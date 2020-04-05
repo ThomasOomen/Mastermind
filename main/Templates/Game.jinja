@@ -23,10 +23,10 @@
                     {%endfor%}
                     {% for check in checks[row] %}
                         {% if check == 2 %}
-                            <div class="sq red"></div>
+                            <div class="sq"></div>
                         {% endif %}
                         {% if check == 1 %}
-                            <div class="sq"></div>
+                            <div class="sq red"></div>
                         {% endif %}
                     {% endfor %}
                 </div>
@@ -38,12 +38,6 @@
 			        {{ form.input }}
 		        </div>
 	        {%endfor%}
-            <div id="parent">
-                {%for i in range(rows)%}
-                    <div id="narrow">
-                        {{ form.input }}
-                    </div>
-                {%endfor%}
             {{ form.submit() }}
         </div>
     </form>

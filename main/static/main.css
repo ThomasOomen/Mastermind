@@ -3,6 +3,11 @@
   padding: 10px;
 }
 
+#narrow {
+  width: 100px;
+}
+
+
 .tableWrap {
   height: 230px;
   border: 2px solid black;
@@ -37,10 +42,6 @@
 
 .tableWrap tr {
   border-bottom: 2px solid #e8e8e8;
-}
-
-#narrow {
-  width: 100px;
 }
 
 .sq {

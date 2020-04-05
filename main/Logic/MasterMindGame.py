@@ -22,7 +22,7 @@ class GameSetup:
         return self.cheat
 
     def game_setup(self, usable_colors):
-        code = self.generate_code(self.amount_of_colors, self.double_colors, self.usable_colors)
+        code = self.generate_code(self.double_colors, self.usable_colors)
         return code
 
     def build_usable_colors(self):
@@ -36,11 +36,13 @@ class GameSetup:
                 usable_colors.append(all_colors[color])
         return usable_colors
 
-    def generate_code(self, amount_of_colors, double_colors, usable_colors):
+    def generate_code(self, double_colors, usable_colors):
         colors = []
+        print(usable_colors[5][1])
         for color in range(int(self.amount_of_rows)):
+            print(color)
             colors.append(usable_colors[color][1])
-
+        print(colors)
         if double_colors == "False":
             code = random.sample(colors, self.amount_of_rows)
             self.set_code(code)
@@ -49,7 +51,6 @@ class GameSetup:
             code = []
             for amount in range(self.amount_of_rows):
                 code.append(random.choice(usable_colors))
-            print("code na append", code)
             code = list(map(itemgetter(1), code))
             self.set_code(code)
             return code
@@ -68,8 +69,8 @@ class GameSetup:
 
 
 class GameLogic:
-
-    def __init__(self, code, usable_colors, active_user, cheat, colors, guessed_colors, guesses_used, correct_guesses, rows):
+    def __init__(self, code, usable_colors, active_user, cheat, colors,
+                 guessed_colors, guesses_used, correct_guesses, rows):
 
         self.mystery_code = code
         self.usable_colors = usable_colors
@@ -96,6 +97,8 @@ class GameLogic:
         else:
             self.correct_guesses = correct_guesses
 
+    def print(self):
+        print(self.guessed_used)
 
     def check(self, inputs):
         guesses_correct = []
@@ -117,13 +120,11 @@ class GameLogic:
             if list[color] in temp_code:
                 temp_code[temp_code.index(list[color])] = None
                 guesses_correct.append(2)
-        print(guesses_correct)
         if len(guesses_correct) == self.rows and all(number is 1 for number in guesses_correct):
             self.won = True
         else:
             self.set_guesses_used()
         self.set_correct_guesses(guesses_correct)
-
 
     def update(self, inputs):
         self.check(inputs)
@@ -134,6 +135,7 @@ class GameLogic:
             self.updateDb(win=False)
             return render_template('lose.jinja')
         else:
+            print("doe iets")
             guessed_colors = []
             for input in inputs:
                 n = int(input)
@@ -142,6 +144,9 @@ class GameLogic:
             session["guessed_colors"] = self.get_guessed_colors()
             session["guesses_used"] = self.get_guesses_used()
             session["correct_guesses"] = self.get_correct_guesses()
+            print("guesses used ", self.get_guesses_used())
+            print("guessed color", self.get_guessed_colors())
+            print("correct_guesses", self.get_correct_guesses())
             return render_template("Game.jinja", form=self.form, rows=self.rows, colors=self.colors_info,
                                    code=self.mystery_code, cheat=self.cheat, guessed_rows=self.get_guesses_used(),
                                    guessed_colors=self.get_guessed_colors(), checks=self.get_correct_guesses())
@@ -152,7 +157,7 @@ class GameLogic:
         else:
             self.cheat = True
         userstats = UserStats(date_played=datetime.now(), win=win, cheat=self.cheat,
-                              amount_of_guesses=self.guesses_used + 1, user_id=self.active_user)
+                              amount_of_guesses=self.get_guesses_used() + 1, user_id=self.active_user)
         db.session.add(userstats)
         db.session.commit()
 

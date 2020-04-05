@@ -76,12 +76,12 @@ def newgame():
     session["cheat"] = gameSetup.get_cheat()
     session["colors"] = info.amount_of_colors
     session["rows"] = info.amount_of_rows
-
     session["guessed_colors"] = []
     session["correct_guesses"] = []
     session["guesses_used"] = 0
     return render_template("Game.jinja", form=form, rows=info.amount_of_rows, colors=info.amount_of_colors,
-                           code=gameSetup.get_code(), cheat=gameSetup.get_cheat(), rows=1, guessed_colors=[])
+                           code=gameSetup.get_code(), cheat=gameSetup.get_cheat(),
+                           guesses_used=session.get("guesses_used"), guessed_colors=[])
 
 
 @app.route('/game', methods=['POST'])
@@ -90,6 +90,7 @@ def game():
         return gameLogic.update(request.values.getlist('input'))
     else:
         gameLogic = GameLogic(session.get("code"), session.get("usable_colors"), session.get("active_user"),
-                              session.get("cheat"), session.get("colors"), session.get("rows")), session.get("guessed_colors"),
-                              session.get("guesses_used"), session.get("correct_guesses"))
+                              session.get("cheat"), session.get("colors"), session.get("guessed_colors"),
+                              session.get("guesses_used"), session.get("correct_guesses"), session.get("rows"))
+        gameLogic.print()
         return gameLogic.update(request.values.getlist('input'))
