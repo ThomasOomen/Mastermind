@@ -11,6 +11,8 @@ class GameSetup:
     def __init__(self, amount_of_colors, amount_of_rows, cheat, double_colors):
         self.amount_of_colors = amount_of_colors
         self.amount_of_rows = amount_of_rows
+        print(self.amount_of_colors)
+        print(self.amount_of_rows)
         self.cheat = cheat
         self.double_colors = double_colors
         self.all_colors = [(0, 'Groen'), (1, 'Geel'), (2, 'Rood'),
@@ -22,7 +24,7 @@ class GameSetup:
         return self.cheat
 
     def game_setup(self, usable_colors):
-        code = self.generate_code(self.double_colors, self.usable_colors)
+        code = self.generate_code(self.amount_of_colors, self.double_colors, self.usable_colors)
         return code
 
     def build_usable_colors(self):
@@ -36,13 +38,11 @@ class GameSetup:
                 usable_colors.append(all_colors[color])
         return usable_colors
 
-    def generate_code(self, double_colors, usable_colors):
+    def generate_code(self, amount_of_colors, double_colors, usable_colors):
         colors = []
-        print(usable_colors[5][1])
-        for color in range(int(self.amount_of_rows)):
-            print(color)
+        for color in range(int(self.amount_of_colors)):
             colors.append(usable_colors[color][1])
-        print(colors)
+
         if double_colors == "False":
             code = random.sample(colors, self.amount_of_rows)
             self.set_code(code)
@@ -51,6 +51,7 @@ class GameSetup:
             code = []
             for amount in range(self.amount_of_rows):
                 code.append(random.choice(usable_colors))
+            print("code na append", code)
             code = list(map(itemgetter(1), code))
             self.set_code(code)
             return code
@@ -147,6 +148,9 @@ class GameLogic:
             print("guesses used ", self.get_guesses_used())
             print("guessed color", self.get_guessed_colors())
             print("correct_guesses", self.get_correct_guesses())
+            print(self.form, self.rows, self.colors_info,
+                                   self.mystery_code, self.cheat, self.get_guesses_used(),
+                                   self.get_guessed_colors(), self.get_correct_guesses())
             return render_template("Game.jinja", form=self.form, rows=self.rows, colors=self.colors_info,
                                    code=self.mystery_code, cheat=self.cheat, guessed_rows=self.get_guesses_used(),
                                    guessed_colors=self.get_guessed_colors(), checks=self.get_correct_guesses())

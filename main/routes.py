@@ -63,8 +63,7 @@ def userinfo():
 @app.route("/newgame", methods=['POST', 'GET'])
 def newgame():
     active_user = flask_login.current_user.id
-    all_games = Game.query.filter_by(user_id=active_user).all()
-    info = all_games[-1]
+    info = Game.query.filter_by(user_id=active_user).first()
     # print(info.cheat, info.double_colors)
     gameSetup = GameSetup(info.amount_of_colors, info.amount_of_rows, info.cheat, info.double_colors)
     gameSetup.game_setup(gameSetup.build_usable_colors())
