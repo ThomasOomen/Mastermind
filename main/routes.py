@@ -64,7 +64,6 @@ def userinfo():
 def newgame():
     active_user = flask_login.current_user.id
     info = Game.query.filter_by(user_id=active_user).first()
-    # print(info.cheat, info.double_colors)
     gameSetup = GameSetup(info.amount_of_colors, info.amount_of_rows, info.cheat, info.double_colors)
     gameSetup.game_setup(gameSetup.build_usable_colors())
     form = GameForm()
@@ -91,5 +90,4 @@ def game():
         gameLogic = GameLogic(session.get("code"), session.get("usable_colors"), session.get("active_user"),
                               session.get("cheat"), session.get("colors"), session.get("guessed_colors"),
                               session.get("guesses_used"), session.get("correct_guesses"), session.get("rows"))
-        gameLogic.print()
         return gameLogic.update(request.values.getlist('input'))
